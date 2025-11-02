@@ -1,4 +1,4 @@
-package com.thanu.came;
+package com.thanu.came.challange2;
 
 import java.util.Arrays;
 
