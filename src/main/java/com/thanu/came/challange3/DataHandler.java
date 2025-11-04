@@ -2,6 +2,12 @@ package com.thanu.came.challange3;
 
 import com.thanu.came.challange3.dto.Student;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -68,7 +74,36 @@ public class DataHandler {
             System.out.println("Nothing to print");
         }else {
             studentList.forEach(System.out::println);
+            writeDataToFile(studentList);
         }
     }
+    private void writeDataToFile(List<Student> studentList) {
+        String filePath = "/media/thanura/Codes/Projects/Prac/CAME/InitProg/src/main/resources/students.csv";
+        Path path = Paths.get(filePath);
 
-}
+           try{
+                if(!Files.exists(path.getParent())){
+                    Files.createDirectories(path.getParent());
+                    System.out.println("Directory Created at: " + path.getParent());
+                }
+                if(!Files.exists(path)){
+                    Files.createFile(path);
+                    Files.writeString(path, "id,name\n" , StandardCharsets.UTF_8, StandardOpenOption.APPEND);
+                    System.out.println("Headers written at: " + path.toAbsolutePath());
+                }
+               List<String> newTxtLines = new ArrayList<>();
+               for(Student student : studentList){
+                   String line = String.format("%s,%s",student.getStudentId(),student.getStudentName());
+                   newTxtLines.add(line);
+               }
+               Files.write(path, newTxtLines, StandardCharsets.UTF_8, StandardOpenOption.APPEND);
+               System.out.println("Data Written to: " + path.toAbsolutePath());
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }
+
